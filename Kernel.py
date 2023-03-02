@@ -20,19 +20,18 @@ def get_database():
 
 
 dbname = get_database()
-collectiondata = dbname['Mensajes']
+collectiondata = dbname['Mensajes'] #We already know the name of the table to extract the data
 detalles = collectiondata.find()
-
+#Dataframe to analize the info and clean it and update 
 Dataframe = pd.DataFrame(list(detalles))
+#Clean all dummy info without a message
 Dataframe['mensaje'] = Dataframe['mensaje'].replace([None,''],0)
 Dataframe = Dataframe[Dataframe['mensaje'] != 0]
 
 print(Dataframe)
 
 # API use
-
 for i in range(len(Dataframe.index)):
-  
   if(Dataframe.iloc[i,7] == False):
     mensaje = f'El profesor {str(Dataframe.iloc[i,2])} de la materia {str(Dataframe.iloc[i,4])} dice:\n{Dataframe.iloc[i,1]}'  
     URL = f'https://api.telegram.org/bot6076404908:AAFBHUDbp55T4qwH8chUOB3ZbyenBMRsBD4/sendMessage?chat_id=@BotUpiita&text={mensaje}'

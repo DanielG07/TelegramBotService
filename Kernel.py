@@ -16,27 +16,28 @@ def get_database():
 
   # Connect to your MongoDB cluster:
   client = MongoClient(MONGODB_URI)
-  return client['appTelegram']
+  return client['appTelegram'] #we already know the name of the database
 
-# List all the databases in the cluster:
+
 dbname = get_database()
 collectiondata = dbname['Mensajes']
 detalles = collectiondata.find()
 
 Dataframe = pd.DataFrame(list(detalles))
-# print(Dataframe)
+Dataframe['mensaje'] = Dataframe['mensaje'].replace([None,''],0)
+Dataframe = Dataframe[Dataframe['mensaje'] != 0]
 
-# API
-# api-endpoint
+print(Dataframe)
+
+# API use
 
 for i in range(len(Dataframe.index)):
   
   if(Dataframe.iloc[i,7] == False):
-    mensaje = Dataframe.iloc[i,1]  
+    mensaje = f'El profesor {str(Dataframe.iloc[i,2])} de la materia {str(Dataframe.iloc[i,4])} dice:\n{Dataframe.iloc[i,1]}'  
     URL = f'https://api.telegram.org/bot6076404908:AAFBHUDbp55T4qwH8chUOB3ZbyenBMRsBD4/sendMessage?chat_id=@BotUpiita&text={mensaje}'
-    #params={'chat_id':'@BotUpiita','text':mensaje}
     x = requests.post(URL)
-    #TO.DO
+    #TO-DO
     #Que el equipo 2 cree una api para solo hacer update al registro de False a True c;
   else:
     pass

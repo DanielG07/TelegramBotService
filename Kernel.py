@@ -38,6 +38,9 @@ for i in range(len(Dataframe.index)):
     x = requests.post(URL)
     #TO-DO
     #Que el equipo 2 cree una api para solo hacer update al registro de False a True c;
+    URLUpdateStatus = f'https://AppTelegram.repl.co/check'             
+    params={'id': Dataframe.iloc[i,0]}             
+    y = requests.post(URLUpdateStatus, params) 
   else:
     pass
   

@@ -6,11 +6,13 @@ import requests
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 def get_database():
-  # Credenciales
-  load_dotenv()
+  # Credenciales base de datos
   MONGOUSER =  os.environ["MONGOUSER"]
   MONGOPASS = os.environ["MONGOPASS"]
+  
   # URI del equipo 2
   MONGODB_URI = f'mongodb+srv://{MONGOUSER}:{MONGOPASS}@cluster-sd.uhhmbgs.mongodb.net/?retryWrites=true&w=majority'
 
@@ -18,6 +20,8 @@ def get_database():
   client = MongoClient(MONGODB_URI)
   return client['appTelegram'] #we already know the name of the database
 
+#API TOKEN de Telegram 
+APIToken = os.environ['APIToken']
 
 dbname = get_database()
 collectiondata = dbname['Mensajes'] #We already know the name of the table to extract the data
@@ -34,11 +38,11 @@ print(Dataframe)
 for i in range(len(Dataframe.index)):
   if(Dataframe.iloc[i,7] == False):
     mensaje = f'El profesor {str(Dataframe.iloc[i,2])} de la materia {str(Dataframe.iloc[i,4])} dice:\n{Dataframe.iloc[i,1]}'  
-    URL = f'https://api.telegram.org/bot6076404908:AAFBHUDbp55T4qwH8chUOB3ZbyenBMRsBD4/sendMessage?chat_id=@BotUpiita&text={mensaje}'
+    URL = f'https://api.telegram.org/bot{APIToken}/sendMessage?chat_id=@BotUpiita&text={mensaje}'
     x = requests.post(URL)
     #TO-DO
     #Que el equipo 2 cree una api para solo hacer update al registro de False a True c;
-    URLUpdateStatus = f'https://AppTelegram.repl.co/check'             
+    URLUpdateStatus = 'https://AppTelegram.repl.co/check'             
     params={'id': Dataframe.iloc[i,0]}             
     y = requests.post(URLUpdateStatus, params) 
   else:
